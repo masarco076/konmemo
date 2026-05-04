@@ -1,4 +1,4 @@
-const CACHE_NAME = "konmemo-v11";
+const CACHE_NAME = "konmemo-v12";
 const ASSETS = [
   "./",
   "./index.html",
