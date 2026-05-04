@@ -74,7 +74,7 @@
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior-y: contain;
   }
-  .app { max-width: 1080px; margin: 0 auto; }
+  .app { max-width: 560px; margin: 0 auto; }
 
   header {
     display: flex;
@@ -115,7 +115,7 @@
 
   .layout {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+    grid-template-columns: 1fr;
     gap: 14px;
     align-items: start;
   }
@@ -278,46 +278,61 @@
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
 
+  .fridge-head { display: none; }
   .fridge-row {
     display: grid;
-    grid-template-columns: 1.25fr 76px 60px minmax(140px, 1fr) 34px;
-    gap: 6px;
-    align-items: start;
-    margin-bottom: 6px;
-  }
-  .fridge-head {
-    display: grid;
-    grid-template-columns: 1.25fr 76px 60px minmax(140px, 1fr) 34px;
-    gap: 6px;
-    margin-bottom: 4px;
-    color: var(--text-soft);
-    font-size: 11px;
-    font-weight: 700;
-  }
-  .fridge-row button {
-    padding: 6px 8px;
-    background: var(--surface-soft);
-    color: var(--text-muted);
+    grid-template-columns: 1fr 76px 60px 36px;
+    grid-template-rows: auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 10px;
     border: 1px solid var(--border);
-    min-height: 32px;
+    border-radius: var(--r-md);
+    background: var(--surface);
   }
-  .fridge-row button:hover { background: var(--accent-soft); color: var(--accent); border-color: var(--accent-border); }
-  .expiry-cell { min-width: 0; }
+  .fridge-row .fname { grid-column: 1 / 4; grid-row: 1; font-weight: 700; }
+  .fridge-row .famount { grid-column: 1; grid-row: 2; }
+  .fridge-row .funit { grid-column: 2; grid-row: 2; }
+  .fridge-row .expiry-cell { grid-column: 3 / 5; grid-row: 2; min-width: 0; }
+  .fridge-row > button {
+    grid-column: 4; grid-row: 1;
+    width: 32px; height: 32px;
+    min-height: 32px;
+    padding: 0;
+    background: transparent;
+    color: var(--text-soft);
+    border: 0;
+    border-radius: 50%;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1;
+    box-shadow: none;
+    justify-self: end;
+  }
+  .fridge-row > button:hover {
+    background: var(--warning);
+    color: #fff;
+    box-shadow: none;
+  }
   .expiry-cell .hidden { display: none; }
 
-  .checks { display: flex; flex-wrap: wrap; gap: 8px; }
+  .checks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
   .checks label, .toggle {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    justify-content: center;
+    gap: 5px;
     border: 1px solid var(--border);
     border-radius: var(--r-full);
-    padding: 8px 14px;
+    padding: 8px 4px;
     background: var(--surface);
     font-size: 13px;
     cursor: pointer;
     transition: background var(--tx), border-color var(--tx), color var(--tx);
-    min-height: 36px;
+    min-height: 38px;
+    min-width: 0;
+    text-align: center;
   }
   .checks label:hover, .toggle:hover { background: var(--primary-tint); border-color: var(--primary-border); }
   .checks label:has(input:checked), .toggle:has(input:checked) {
@@ -830,10 +845,8 @@
     .layout, .row, .row3 { grid-template-columns: 1fr; gap: 12px; }
     .strategy-actions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .strategy-actions button { font-size: 12px; padding: 9px 4px; min-height: 44px; }
-    .fridge-row { grid-template-columns: minmax(0, 1fr) 76px 60px 34px; }
-    .fridge-head { display: none; }
-    .expiry-cell { grid-column: 1 / -1; }
-    .checks label, .toggle { font-size: 13px; min-height: 38px; padding: 8px 12px; }
+    .expiry-cell { grid-column: 3 / 5; }
+    .checks label, .toggle { font-size: 13px; min-height: 40px; padding: 8px 4px; }
     .allergy-checks { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .modal-card { padding: 14px; border-radius: var(--r-md); }
   }
@@ -959,7 +972,7 @@
         <h3>今週食べたいジャンル</h3>
         <div class="checks" id="genreChecks"></div>
 
-        <h3>献立を作る日</h3>
+        <h3>献立を作る曜日</h3>
         <div class="checks" id="dayChecks"></div>
 
         <div class="settings-panel">
@@ -3780,7 +3793,7 @@ function load() {
   fillSelectors();
   DAYS.forEach((d,i) => { const label = document.createElement("label"); label.innerHTML = `<input type="checkbox" value="${i}" ${i < 5 ? "checked" : ""}>${d}`; document.getElementById("dayChecks").appendChild(label); });
   const saved = JSON.parse(localStorage.getItem("preShopPlanner_v1") || "null");
-  const rows = saved?.fridge?.length ? saved.fridge : [{name:"",amount:"",unit:"",keepBy:"soon"},{name:"",amount:"",unit:"",keepBy:"week"}];
+  const rows = saved?.fridge?.length ? saved.fridge : [{name:"",amount:"",unit:"",keepBy:"week"}];
   setFridgeRows(rows);
   if (saved) {
     pantryText.value = saved.pantry || "";
