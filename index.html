@@ -85,14 +85,14 @@
     padding: 0 2px;
   }
   h1 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 800;
     margin: 0;
     color: #ffffff;
     letter-spacing: 0.02em;
     background: var(--primary);
-    padding: 10px 20px;
-    border-radius: var(--r-full);
+    padding: 10px 16px;
+    border-radius: var(--r-sm);
     display: inline-block;
     box-shadow: 0 4px 12px rgba(30,196,122,0.32);
   }
@@ -320,7 +320,7 @@
   .fridge-head { display: none; }
   .fridge-row {
     display: grid;
-    grid-template-columns: 1fr 76px 60px 36px;
+    grid-template-columns: 60px 80px minmax(140px, 1fr) 36px;
     grid-template-rows: auto auto;
     gap: 8px;
     align-items: center;
@@ -334,6 +334,7 @@
   .fridge-row .famount { grid-column: 1; grid-row: 2; }
   .fridge-row .funit { grid-column: 2; grid-row: 2; }
   .fridge-row .expiry-cell { grid-column: 3 / 5; grid-row: 2; min-width: 0; }
+  .fridge-row .expiry-cell .fdate { width: 100%; }
   .fridge-row > button {
     grid-column: 4; grid-row: 1;
     width: 32px; height: 32px;
