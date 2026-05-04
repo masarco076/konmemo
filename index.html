@@ -215,6 +215,19 @@
   button.warn { background: var(--warning); box-shadow: 0 2px 6px rgba(214,128,112,0.22); }
   button.warn:hover { background: var(--warning-hover); }
   .button-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  button.just-saved {
+    background: #10b981 !important;
+    color: #fff !important;
+    border-color: #10b981 !important;
+    box-shadow: 0 4px 12px rgba(16,185,129,0.32) !important;
+    pointer-events: none;
+  }
+  button.save-error {
+    background: var(--warning) !important;
+    color: #fff !important;
+    border-color: var(--warning) !important;
+    pointer-events: none;
+  }
 
   .mic-btn {
     width: 36px; height: 36px;
@@ -516,21 +529,23 @@
   }
   .favorite-btn {
     flex: 0 0 auto;
-    min-width: 32px;
-    min-height: 28px;
-    padding: 4px 8px;
+    min-width: 38px;
+    min-height: 34px;
+    padding: 4px 12px;
     border-radius: var(--r-full);
-    font-size: 13px;
+    font-size: 18px;
     line-height: 1;
     background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--text-soft);
+    border: 1.5px solid var(--border);
+    color: #d1d5db;
+    box-shadow: none;
   }
-  .favorite-btn:hover { background: var(--gold-soft); color: #8a5e10; border-color: var(--gold); }
+  .favorite-btn:hover { background: var(--gold-soft); color: var(--gold); border-color: var(--gold); }
   .favorite-btn.active {
-    background: var(--gold);
-    border-color: #c89020;
-    color: #fff;
+    background: var(--gold-soft);
+    border-color: var(--gold);
+    color: #c8881e;
+    font-size: 20px;
   }
   .recipe-box dl { margin: 0; display: grid; grid-template-columns: 76px 1fr; gap: 5px 8px; }
   .recipe-box dt { color: var(--text-muted); font-weight: 700; }
@@ -867,7 +882,6 @@
     </div>
     <div class="header-actions">
       <button class="secondary settings-btn" id="openOptions">オプション</button>
-      <div class="status" id="saveStatus">保存済み</div>
     </div>
   </header>
 
@@ -2161,9 +2175,8 @@ function save() {
   syncWholeLocks();
   const data = {fridge:getFridge(), pantry:pantryText.value, want:wantText.value, sale:document.getElementById("saleText").value, strategy:strategy.value, strategyCollapsed:strategyBody.hidden, otherSettingsCollapsed:otherSettingsBody.hidden, people:people.value, targetItems:targetItems.value, sideCount:sideCount.value, genres:getGenres(), disliked:dislikedText.value, allergies:allergyText.value, allergyChecks:getAllergies(), timeLimit:timeLimit.value, favoriteRecipes:getFavoriteRecipes(), days:getDays(), easy:easyMode.checked, rice:riceNoodleOk.checked, repeat:repeatOk.checked, avoidSpicy:avoidSpicy.checked, lowGarlic:lowGarlic.checked, avoidFried:avoidFried.checked, plan:currentPlan, shopping:currentShopping, lockedDays:[...lockedDays], lockedMainDays:[...lockedMainDays], lockedSideDays:[...lockedSideDays], lockedSideSlots, recentRecipeNames, shoppingOverrides, finalizedPlans};
   localStorage.setItem("preShopPlanner_v1", JSON.stringify(data));
-  document.getElementById("saveStatus").textContent = "保存済み";
 }
-function markDirty() { document.getElementById("saveStatus").textContent = "編集中"; clearTimeout(markDirty.t); markDirty.t = setTimeout(save, 500); }
+function markDirty() { clearTimeout(markDirty.t); markDirty.t = setTimeout(save, 500); }
 function setStrategyCollapsed(collapsed) {
   strategyBody.hidden = collapsed;
   strategyToggle.textContent = collapsed ? "作戦を開く" : "作戦を閉じる";
@@ -3691,7 +3704,7 @@ function removeFinalizedPlans(ids) {
 }
 function finalizeCurrentPlan() {
   if (!currentPlan.length) {
-    alert("先に献立と買い物リストを作ってください。");
+    flashSaveButtons("先に献立を作ってね", true);
     return;
   }
   const snapshot = {
@@ -3706,8 +3719,25 @@ function finalizeCurrentPlan() {
   activeSavedPlanId = "";
   renderSavedPlans();
   save();
-  document.getElementById("saveStatus").textContent = "決定保存済み";
-  alert("今週の献立と買い物リストを保存しました。スーパーでは「保存済みを見る」から確認できます。");
+  flashSaveButtons("✓ 保存しました");
+}
+function flashSaveButtons(message, isError = false) {
+  [finalizePlan, finalizePlanTop].forEach(btn => {
+    if (!btn) return;
+    if (btn._restoreTimer) {
+      clearTimeout(btn._restoreTimer);
+      btn.textContent = btn.dataset.originalText || btn.textContent;
+      btn.classList.remove("just-saved", "save-error");
+    }
+    btn.dataset.originalText = btn.dataset.originalText || btn.textContent;
+    btn.textContent = message;
+    btn.classList.add(isError ? "save-error" : "just-saved");
+    btn._restoreTimer = setTimeout(() => {
+      btn.textContent = btn.dataset.originalText;
+      btn.classList.remove("just-saved", "save-error");
+      btn._restoreTimer = null;
+    }, 1800);
+  });
 }
 function renderAll(ctx, manualStrategy = "") {
   syncWholeLocks();
