@@ -148,7 +148,7 @@
   }
   h3 {
     font-size: 14px;
-    font-weight: 700;
+    font-weight: 800;
     margin: 16px 0 8px;
     color: var(--text);
     letter-spacing: 0.01em;
@@ -602,7 +602,8 @@
   .shopping-item.checked { background: var(--primary-tint); margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: var(--r-sm); border-bottom-color: transparent; }
   .shopping-item.checked .shopping-info { text-decoration: line-through; color: var(--text-soft); }
   .shopping-item.checked .shopping-amount strong { text-decoration: line-through; color: var(--text-soft); }
-  .shopping-info { min-width: 0; line-height: 1.45; flex: 1 1 auto; }
+  .shopping-info { min-width: 0; line-height: 1.45; flex: 1 1 auto; color: var(--text); font-weight: 600; }
+  .shopping-amount strong { color: var(--text); font-weight: 700; }
   .saved-shopping-check {
     flex: 0 0 auto;
     width: 22px; height: 22px;
@@ -3771,7 +3772,7 @@ function renderAll(ctx, manualStrategy = "") {
     }).join("");
     const sideBadges = (p.sides || []).map((_, i) => isSideSlotLocked(p.day, i) ? `<span class="badge fridge">副菜${i + 1}固定</span>` : "").join("");
     const lockBadges = `${mainLocked ? `<span class="badge fridge">主菜固定</span>` : ""}${sideBadges}`;
-    const card = `<div class="day${locked ? " locked" : ""}"><div class="day-title"><span>${DAYS[p.day]}曜日</span><span class="time-total">計${totalTime}分</span></div><div class="dish">${p.main.name}</div><div class="meta">${sideSummary(p.sides)}</div><div>${badges}${lockBadges}</div>${renderDayRecipes(p, ctx.people)}<div class="day-actions"><button class="${mainLocked ? "" : "secondary"}" data-lock-main-day="${p.day}">${mainLocked ? "主菜固定を外す" : "主菜を残す"}</button>${sideLockButtons(p)}<button class="${isWholeLocked(p.day) ? "" : "secondary"}" data-lock-day="${p.day}">${isWholeLocked(p.day) ? "全部固定を外す" : "全部残す"}</button></div></div>`;
+    const card = `<div class="day${locked ? " locked" : ""}"><div class="day-title"><span>${DAYS[p.day]}曜日</span><span class="time-total">計${totalTime}分</span></div><div class="dish">主菜：${p.main.name}</div><div class="meta">${sideSummary(p.sides)}</div><div>${badges}${lockBadges}</div>${renderDayRecipes(p, ctx.people)}<div class="day-actions"><button class="${mainLocked ? "" : "secondary"}" data-lock-main-day="${p.day}">${mainLocked ? "主菜固定を外す" : "主菜を残す"}</button>${sideLockButtons(p)}<button class="${isWholeLocked(p.day) ? "" : "secondary"}" data-lock-day="${p.day}">${isWholeLocked(p.day) ? "全部固定を外す" : "全部残す"}</button></div></div>`;
     const next = currentPlan[index + 1];
     return next ? card + daySwapButton(p.day, next.day) : card;
   }).join("") || `<div class="empty">まだ作成されていません。</div>`;
