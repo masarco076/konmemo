@@ -65,7 +65,10 @@
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
-    background: var(--bg);
+    background-color: var(--bg);
+    background-image: linear-gradient(180deg, #0a7d49 0%, #1ec47a 30%, var(--bg) 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 480px;
     color: var(--text);
     font-size: 15px;
     line-height: 1.6;
@@ -73,6 +76,14 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior-y: contain;
+  }
+  .h1-sub {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.85);
+    margin-top: 2px;
+    letter-spacing: 0.02em;
   }
   .app { max-width: 560px; margin: 0 auto; }
 
@@ -900,7 +911,7 @@
 <div class="app">
   <header>
     <div>
-      <h1>買い物前の献立整理</h1>
+      <h1>献メモ<span class="h1-sub">（買い物前の献立整理）</span></h1>
     </div>
     <div class="header-actions">
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
