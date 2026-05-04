@@ -1175,6 +1175,16 @@ const ALLERGEN_MAP = {
   りんご:["りんご"],
   ゼラチン:["ゼラチン"]
 };
+const RARE_RECIPES = new Set([
+  "グリーンカレー",
+  "ナシゴレン",
+  "鮭ときのこのホイル焼き",
+  "卵とトマトの炒めもの",
+  "ほうれん草チーズオムレツ",
+  "豆腐チャンプルー",
+  "オムレツ野菜あん",
+  "鶏とブロッコリーの中華炒め"
+]);
 const RECIPES = [
   {name:"鶏もも肉と玉ねぎの照り焼き",time:15,cleanup:1,style:"通常",ing:{鶏もも肉:[120,"g"],玉ねぎ:[0.25,"個"],醤油:[1,"大さじ"],みりん:[1,"大さじ"],酒:[1,"大さじ"],砂糖:[0.5,"大さじ"]}},
   {name:"鶏むね肉の塩だれ焼き",time:15,cleanup:1,style:"通常",ing:{鶏むね肉:[120,"g"],長ねぎ:[0.2,"本"],ごま油:[1,"大さじ"],塩:[0.25,"小さじ"],鶏ガラスープの素:[0.5,"小さじ"],にんにく:[0.25,"小さじ"]}},
@@ -3310,6 +3320,7 @@ function scoreRecipe(r, ctx, used, dayIndex, opts = {}) {
   if (ctx.recent?.includes(r.name) && !activeWanted.includes(r.name) && !ctx.favorites?.includes(r.name)) score -= 24;
   score += Math.max(0, 8 - proteinUsed * 4);
   if (!ctx.genres.length) score -= (opts.genreCounts?.[genre] || 0) * 3;
+  score += RARE_RECIPES.has(r.name) ? -14 : 8;
   const recipeStyle = r.style || "副菜";
   const styleUsed = opts.styleCounts?.[recipeStyle] || 0;
   if (recipeStyle === "丼" || recipeStyle === "麺" || recipeStyle === "粉もの") {
