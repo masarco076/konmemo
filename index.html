@@ -16,7 +16,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>
   :root {
-    --bg: #ffffff;
+    --bg: #eef7f1;
     --surface: #ffffff;
     --surface-soft: #f8f9fb;
     --border: #e8eaed;
@@ -111,7 +111,25 @@
     background: var(--primary);
   }
   .header-actions { display: flex; align-items: center; gap: 8px; }
-  .settings-btn { padding: 8px 14px; font-size: 13px; min-height: 38px; }
+  .settings-btn {
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .settings-btn svg {
+    width: 19px;
+    height: 19px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
 
   .layout {
     display: grid;
@@ -882,7 +900,12 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <button class="secondary settings-btn" id="openOptions">オプション</button>
+      <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
     </div>
   </header>
 
