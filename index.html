@@ -3078,6 +3078,12 @@ function scoreRecipe(r, ctx, used, dayIndex, opts = {}) {
   ctx.strategyItems?.forEach(w => { if (ingNames.includes(w) || r.name.includes(w)) score += 24; });
   ctx.sale.forEach(s => { if (ingNames.includes(s)) score += 38; });
   ctx.fridge.forEach(f => { if (ingNames.includes(f.name)) score += 14 + urgencyScore(f, dayIndex); });
+  const frozenIng = ingNames.filter(n => n.startsWith("冷凍"));
+  if (frozenIng.length) {
+    const frozenInFridge = frozenIng.filter(n => ctx.fridge.some(f => f.name === n));
+    if (frozenInFridge.length) score += 30 * frozenInFridge.length;
+    else score -= 80;
+  }
   ctx.pantry.forEach(p => { if (ingNames.includes(p)) score += ctx.want.includes(p) || ctx.sale.includes(p) ? 8 : 3; });
   const genre = genreFor(r);
   if (opts.preferredGenre) score += genreMatches(r, opts.preferredGenre) ? 34 : -40;
