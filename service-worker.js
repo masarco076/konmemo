@@ -1,8 +1,9 @@
-const CACHE_NAME = "konmemo-v20";
+const CACHE_NAME = "konmemo-v21";
 const ASSETS = [
   "./",
   "./index.html",
   "./recipes.json",
+  "./ingredients.json",
   "./manifest.json",
   "./icon-180.png",
   "./icon-192.png",

@@ -1147,52 +1147,41 @@
 
 <script>
 const DAYS = ["月","火","水","木","金","土","日"];
-const PANTRY = new Set(["米","醤油","塩","砂糖","みりん","酒","油","ごま油","酢","味噌","こしょう","小麦粉","片栗粉","パン粉","マヨネーズ","だし","めんつゆ","鶏ガラスープの素","にんにく","塩昆布","ソース","ケチャップ"]);
-const UNITS = {"鶏もも肉":"g","鶏むね肉":"g","豚こま肉":"g","豚バラ肉":"g","豚ひき肉":"g","合いびき肉":"g","鮭":"切れ","さば":"切れ","卵":"個","豆腐":"丁","キャベツ":"玉","白菜":"玉","玉ねぎ":"個","人参":"本","じゃがいも":"個","大根":"本","きのこ":"パック","ピーマン":"個","トマト":"個","きゅうり":"本","もやし":"袋","長ねぎ":"本","小松菜":"袋","ほうれん草":"袋","なす":"本","ブロッコリー":"株","うどん":"玉","焼きそば麺":"玉","パスタ":"g","マカロニ":"g","米":"合","餃子の皮":"枚","カレールウ":"皿分","シチュールウ":"皿分","パスタソース(カルボナーラ)":"袋","牛乳":"ml","チーズ":"g","バター":"g","カレー粉":"g"};
-const CATEGORIES = {"肉魚":["鶏もも肉","鶏むね肉","豚こま肉","豚バラ肉","豚ひき肉","合いびき肉","鮭","さば"],"野菜":["キャベツ","白菜","玉ねぎ","人参","じゃがいも","大根","きのこ","ピーマン","トマト","きゅうり","もやし","長ねぎ","小松菜","ほうれん草","なす","ブロッコリー"],"卵豆腐":["卵","豆腐"],"米麺":["米","うどん","焼きそば麺","パスタ","マカロニ"],"加工品":["餃子の皮","カレールウ","シチュールウ","パスタソース(カルボナーラ)"],"乳製品":["牛乳","チーズ"]};
-const SHOPPING_CATEGORY_ORDER = ["肉魚","野菜","乳製品","加工品","卵豆腐","米麺","その他"];
-const FRIDGE_CATEGORY_ORDER = ["肉魚","野菜","乳製品","その他","卵豆腐・米麺"];
 const GENRES = ["和食","洋食","中華","イタリアン","韓国","その他"];
-const SEASONINGS = new Set([...PANTRY, "生姜", "カレー粉", "バター"]);
-const DATE_EXPIRY_ITEMS = new Set(["鶏もも肉","鶏むね肉","豚こま肉","豚バラ肉","豚ひき肉","合いびき肉","鮭","さば","卵","豆腐","牛乳","チーズ","うどん","焼きそば麺","餃子の皮","パスタソース(カルボナーラ)"]);
-const FRESH_KEEP_ITEMS = new Set(CATEGORIES.野菜);
-const COMMERCIAL_ITEMS = new Set(["カレールウ","シチュールウ","パスタソース(カルボナーラ)"]);
-const RAW_MATERIALS = {"餃子の皮":["小麦"],"トルティーヤ":["小麦"],"カレールウ":["小麦","乳"],"シチュールウ":["小麦","乳"],"パスタソース(カルボナーラ)":["卵","乳","小麦","チーズ","牛乳"],"ヨーグルト":["乳"],"マヨネーズ":["卵"]};
-const ALLERGEN_REQUIRED_ITEMS = ["えび","かに","くるみ","小麦","そば","卵","乳","落花生"];
-const ALLERGEN_RECOMMENDED_ITEMS = ["アーモンド","あわび","いか","いくら","オレンジ","カシューナッツ","キウイフルーツ","牛肉","ごま","さけ","さば","大豆","鶏肉","バナナ","豚肉","マカダミアナッツ","もも","やまいも","りんご","ゼラチン"];
-const ALLERGEN_ITEMS = ALLERGEN_REQUIRED_ITEMS.concat(ALLERGEN_RECOMMENDED_ITEMS);
-const ALLERGEN_MAP = {
-  卵:["卵","マヨネーズ","パスタソース(カルボナーラ)"],
-  乳:["牛乳","チーズ","バター","ヨーグルト","カレールウ","シチュールウ","パスタソース(カルボナーラ)"],
-  牛乳:["牛乳","チーズ","バター","ヨーグルト","カレールウ","シチュールウ","パスタソース(カルボナーラ)"],
-  えび:["えび"],
-  かに:["かに"],
-  くるみ:["くるみ"],
-  そば:["そば"],
-  落花生:["落花生","ピーナッツ"],
-  カシューナッツ:["カシューナッツ"],
-  アーモンド:["アーモンド"],
-  あわび:["あわび"],
-  いか:["いか"],
-  いくら:["いくら"],
-  オレンジ:["オレンジ"],
-  キウイフルーツ:["キウイフルーツ","キウイ"],
-  小麦:["小麦粉","パン粉","醤油","パスタ","マカロニ","うどん","焼きそば麺","餃子の皮","トルティーヤ","カレールウ","シチュールウ","パスタソース(カルボナーラ)"],
-  ごま:["ごま","ごま油"],
-  大豆:["豆腐","味噌","醤油"],
-  鶏肉:["鶏もも肉","鶏むね肉"],
-  豚肉:["豚こま肉","豚バラ肉","豚ひき肉","合いびき肉"],
-  牛肉:["牛こま肉","牛ひき肉","合いびき肉"],
-  さば:["さば"],
-  さけ:["鮭"],
-  鮭:["鮭"],
-  バナナ:["バナナ"],
-  マカダミアナッツ:["マカダミアナッツ"],
-  もも:["もも"],
-  やまいも:["やまいも","山芋"],
-  りんご:["りんご"],
-  ゼラチン:["ゼラチン"]
-};
+// 食材データは ingredients.json から動的に読み込み（bootApp で初期化）
+let UNITS = {};
+let CATEGORIES = {};
+let SHOPPING_CATEGORY_ORDER = [];
+let FRIDGE_CATEGORY_ORDER = [];
+let PANTRY = new Set();
+let SEASONINGS = new Set();
+let DATE_EXPIRY_ITEMS = new Set();
+let FRESH_KEEP_ITEMS = new Set();
+let COMMERCIAL_ITEMS = new Set();
+let RAW_MATERIALS = {};
+let ALLERGEN_REQUIRED_ITEMS = [];
+let ALLERGEN_RECOMMENDED_ITEMS = [];
+let ALLERGEN_ITEMS = [];
+let ALLERGEN_MAP = {};
+async function loadIngredientData() {
+  const res = await fetch("ingredients.json", {cache: "no-cache"});
+  if (!res.ok) throw new Error("ingredients.json の読み込みに失敗 (" + res.status + ")");
+  const data = await res.json();
+  UNITS = data.units || {};
+  CATEGORIES = data.categories || {};
+  SHOPPING_CATEGORY_ORDER = data.shoppingCategoryOrder || [];
+  FRIDGE_CATEGORY_ORDER = data.fridgeCategoryOrder || [];
+  PANTRY = new Set(data.pantry || []);
+  SEASONINGS = new Set([...(data.pantry || []), "生姜", "カレー粉", "バター"]);
+  DATE_EXPIRY_ITEMS = new Set(data.dateExpiryItems || []);
+  FRESH_KEEP_ITEMS = new Set((CATEGORIES.野菜) || []);
+  COMMERCIAL_ITEMS = new Set(data.commercialItems || []);
+  RAW_MATERIALS = data.rawMaterials || {};
+  ALLERGEN_REQUIRED_ITEMS = data.allergenRequiredItems || [];
+  ALLERGEN_RECOMMENDED_ITEMS = data.allergenRecommendedItems || [];
+  ALLERGEN_ITEMS = ALLERGEN_REQUIRED_ITEMS.concat(ALLERGEN_RECOMMENDED_ITEMS);
+  ALLERGEN_MAP = data.allergenMap || {};
+}
 // レシピデータは recipes.json から動的に読み込み（bootApp で初期化）
 let RARE_RECIPES = new Set();
 let RECIPES = [];
@@ -4005,10 +3994,10 @@ document.querySelectorAll(".tabs button").forEach(btn => btn.addEventListener("c
 }));
 async function bootApp() {
   try {
-    await loadRecipeData();
+    await Promise.all([loadIngredientData(), loadRecipeData()]);
   } catch (e) {
     console.error(e);
-    document.body.innerHTML = '<div style="padding:32px;text-align:center;font-family:sans-serif;color:#333;"><p>レシピデータを読み込めませんでした。</p><p style="font-size:13px;color:#888">ネット接続を確認して、ページを再読み込みしてください。</p><button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;border:0;background:#1ec47a;color:#fff;border-radius:8px;font-size:14px;font-weight:700;">再読み込み</button></div>';
+    document.body.innerHTML = '<div style="padding:32px;text-align:center;font-family:sans-serif;color:#333;"><p>データを読み込めませんでした。</p><p style="font-size:13px;color:#888">ネット接続を確認して、ページを再読み込みしてください。</p><button onclick="location.reload()" style="margin-top:16px;padding:10px 20px;border:0;background:#1ec47a;color:#fff;border-radius:8px;font-size:14px;font-weight:700;">再読み込み</button></div>';
     return;
   }
   load();
