@@ -6,7 +6,7 @@
 <title>コンメモ</title>
 <meta name="description" content="献立と買い物リストを整理するアプリ">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#6ea890">
+<meta name="theme-color" content="#d97a6c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -16,35 +16,35 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <style>
   :root {
-    --bg: #fbf6ef;
+    --bg: #faf5ef;
     --surface: #ffffff;
-    --surface-soft: #fff9f3;
-    --border: #f0e6d6;
-    --border-soft: #f6efe1;
-    --text: #3a3431;
-    --text-muted: #8a7a6e;
-    --text-soft: #b3a698;
-    --primary: #6ea890;
-    --primary-hover: #5a9078;
-    --primary-deep: #3f6f5b;
-    --primary-soft: #e9f3ee;
-    --primary-tint: #f3f9f5;
-    --primary-border: #c2dccd;
-    --accent: #e08c6e;
-    --accent-soft: #fbeee2;
-    --accent-border: #f0c9b5;
-    --warning: #d68070;
-    --warning-hover: #b86354;
-    --gold: #e8b96b;
-    --gold-soft: #fdecc6;
-    --pink: #e8a5a9;
-    --pink-soft: #fbe5e8;
-    --pink-border: #f1c5c9;
-    --mint: #a8d4b8;
-    --mint-soft: #ecf6ef;
-    --mint-border: #c6e2cf;
-    --blue-soft: #e3eef4;
-    --blue-border: #c5dee9;
+    --surface-soft: #fdf7f1;
+    --border: #efe0d2;
+    --border-soft: #f6ebde;
+    --text: #3d322f;
+    --text-muted: #8a766c;
+    --text-soft: #b3a094;
+    --primary: #d97a6c;
+    --primary-hover: #c4604f;
+    --primary-deep: #a8463a;
+    --primary-soft: #fbe6e0;
+    --primary-tint: #fdf3ee;
+    --primary-border: #f0c5b8;
+    --accent: #b896c4;
+    --accent-soft: #f1e8f5;
+    --accent-border: #ddc8e4;
+    --warning: #b85a4a;
+    --warning-hover: #9a4438;
+    --gold: #d9a85a;
+    --gold-soft: #f7ebcc;
+    --pink: #e89aa3;
+    --pink-soft: #fce0e4;
+    --pink-border: #f3c4cb;
+    --mint: #a8c8b5;
+    --mint-soft: #ecf2ee;
+    --mint-border: #c8d8cb;
+    --blue-soft: #e6ebf2;
+    --blue-border: #c8d1de;
     --shadow-xs: 0 1px 2px rgba(120,95,70,0.05);
     --shadow-sm: 0 4px 12px rgba(120,95,70,0.06);
     --shadow-md: 0 8px 20px rgba(120,95,70,0.08);
@@ -91,8 +91,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: var(--mint-soft);
-    border: 1px solid var(--mint-border);
+    background: var(--primary-soft);
+    border: 1px solid var(--primary-border);
     color: var(--primary-deep);
     border-radius: var(--r-full);
     padding: 4px 12px;
@@ -197,9 +197,9 @@
     color: #fff;
     transition: background var(--tx), transform var(--tx), box-shadow var(--tx);
     min-height: 40px;
-    box-shadow: 0 2px 6px rgba(110,168,144,0.22);
+    box-shadow: 0 2px 6px rgba(217,122,108,0.22);
   }
-  button:hover { background: var(--primary-hover); box-shadow: 0 3px 10px rgba(110,168,144,0.3); }
+  button:hover { background: var(--primary-hover); box-shadow: 0 3px 10px rgba(217,122,108,0.3); }
   button:active { transform: translateY(1px); }
   button.secondary {
     background: var(--surface);
@@ -207,7 +207,7 @@
     border: 1px solid var(--primary-border);
     box-shadow: 0 1px 3px rgba(120,95,70,0.05);
   }
-  button.secondary:hover { background: var(--primary-tint); border-color: var(--primary); box-shadow: 0 2px 8px rgba(110,168,144,0.14); }
+  button.secondary:hover { background: var(--primary-tint); border-color: var(--primary); box-shadow: 0 2px 8px rgba(217,122,108,0.14); }
   button.warn { background: var(--warning); box-shadow: 0 2px 6px rgba(214,128,112,0.22); }
   button.warn:hover { background: var(--warning-hover); }
   .button-row { display: flex; gap: 8px; flex-wrap: wrap; }
@@ -266,10 +266,10 @@
     border-radius: var(--r-full);
     background: var(--primary);
     min-height: 52px;
-    box-shadow: 0 6px 16px rgba(110,168,144,0.3);
+    box-shadow: 0 6px 16px rgba(217,122,108,0.3);
     letter-spacing: 0.04em;
   }
-  .primary-action:hover { background: var(--primary-hover); box-shadow: 0 8px 20px rgba(110,168,144,0.36); transform: translateY(-1px); }
+  .primary-action:hover { background: var(--primary-hover); box-shadow: 0 8px 20px rgba(217,122,108,0.36); transform: translateY(-1px); }
 
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
@@ -315,9 +315,9 @@
     transition: background var(--tx), border-color var(--tx), color var(--tx);
     min-height: 36px;
   }
-  .checks label:hover, .toggle:hover { background: var(--mint-soft); border-color: var(--mint-border); }
+  .checks label:hover, .toggle:hover { background: var(--primary-tint); border-color: var(--primary-border); }
   .checks label:has(input:checked), .toggle:has(input:checked) {
-    background: var(--mint-soft);
+    background: var(--primary-soft);
     border-color: var(--primary);
     color: var(--primary-deep);
     font-weight: 700;
@@ -373,8 +373,8 @@
     border-radius: var(--r-full) 0 0 var(--r-full);
   }
   .day.locked {
-    background: var(--mint-soft);
-    border-color: var(--mint-border);
+    background: var(--accent-soft);
+    border-color: var(--accent-border);
   }
   .day.locked::before { background: var(--primary); }
   .day-title {
@@ -388,7 +388,7 @@
     font-size: 13px;
     letter-spacing: 0.04em;
   }
-  .day.locked .day-title { color: var(--primary-deep); }
+  .day.locked .day-title { color: #7a5a8a; }
   .day-actions { display: flex; justify-content: flex-end; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
   .day-actions button { padding: 6px 10px; font-size: 12px; min-height: 32px; }
 
@@ -432,8 +432,8 @@
   }
   .day.locked .time-total {
     background: #fff;
-    color: var(--primary-deep);
-    border-color: var(--mint-border);
+    color: #7a5a8a;
+    border-color: var(--accent-border);
   }
   .dish { font-weight: 800; color: var(--text); font-size: 15px; line-height: 1.45; }
   .meta { color: var(--text-muted); font-size: 12px; margin-top: 3px; line-height: 1.55; }
@@ -449,7 +449,7 @@
     font-weight: 700;
     border: 1px solid var(--border);
   }
-  .badge.fridge { background: var(--mint-soft); color: var(--primary-deep); border-color: var(--mint-border); }
+  .badge.fridge { background: var(--mint-soft); color: #5a7a68; border-color: var(--mint-border); }
   .badge.sale { background: var(--pink-soft); color: #b85e62; border-color: var(--pink-border); }
   .badge.easy { background: var(--blue-soft); color: #4a7290; border-color: var(--blue-border); }
 
@@ -641,11 +641,11 @@
     box-shadow: none;
     transition: background var(--tx), color var(--tx);
   }
-  .tabs button:hover { background: var(--mint-soft); color: var(--primary-deep); }
+  .tabs button:hover { background: var(--primary-tint); color: var(--primary-deep); }
   .tabs button.active {
     color: #fff;
     background: var(--primary);
-    box-shadow: 0 4px 12px rgba(110,168,144,0.32);
+    box-shadow: 0 4px 12px rgba(217,122,108,0.32);
   }
   .tabs button.active:hover { background: var(--primary); color: #fff; }
 
@@ -686,7 +686,7 @@
     background: var(--pink-soft);
     margin-top: 10px;
   }
-  .saved-card.open { border-color: var(--mint-border); background: var(--mint-soft); }
+  .saved-card.open { border-color: var(--accent-border); background: var(--accent-soft); }
   .saved-toolbar { margin-bottom: 10px; }
   .saved-toolbar button { padding: 7px 12px; font-size: 12px; min-height: 32px; }
   .saved-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 8px; }
@@ -798,11 +798,11 @@
     min-height: 42px;
     transition: background var(--tx), color var(--tx);
   }
-  .saved-subtab:hover { background: var(--mint-soft); color: var(--primary-deep); }
+  .saved-subtab:hover { background: var(--primary-tint); color: var(--primary-deep); }
   .saved-subtab.active {
     background: var(--primary);
     color: #fff;
-    box-shadow: 0 4px 10px rgba(110,168,144,0.28);
+    box-shadow: 0 4px 10px rgba(217,122,108,0.28);
   }
 
   .saved-sections { display: grid; gap: 10px; }
