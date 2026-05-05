@@ -903,6 +903,48 @@
     .modal-card { padding: 14px; border-radius: var(--r-md); }
   }
 
+  .opt-section {
+    background: var(--surface-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--r-md);
+    padding: 14px;
+    margin-bottom: 12px;
+  }
+  .opt-section + .opt-section { margin-top: 0; }
+  .opt-section .lbl { font-size: 14px; margin-bottom: 8px; color: var(--text); }
+  .opt-section textarea, .opt-section select { background: var(--surface); }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a2620;
+      --surface: #252e29;
+      --surface-soft: #2d3631;
+      --border: #3a443e;
+      --border-soft: #333d37;
+      --text: #e8ebe9;
+      --text-muted: #a8b0aa;
+      --text-soft: #6e7672;
+      --primary-soft: #1e3a2c;
+      --primary-tint: #1a3025;
+      --accent-soft: #3a2820;
+      --pink-soft: #3a2228;
+      --mint-soft: #1c3025;
+      --blue-soft: #1f2630;
+      --purple-soft: #2a2438;
+      --gold-soft: #3a2f1a;
+    }
+    .saved-card { background: var(--surface-soft); }
+    .day { background: var(--surface-soft); }
+    .recipe-box { background: var(--surface-soft); }
+    .empty { background: var(--surface-soft); }
+    button.secondary { background: var(--surface-soft); }
+    .tabs { background: rgba(37,46,41,0.95); }
+    .saved-subtabs { background: var(--surface-soft); }
+    .checks label, .toggle { background: var(--surface-soft); }
+    input, select, textarea { background: var(--surface-soft); }
+    .favorite-btn { background: var(--surface-soft); }
+    .settings-btn { background: rgba(37,46,41,0.95); color: var(--primary); border-color: rgba(37,46,41,0.95); }
+  }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
       animation-duration: 0.01ms !important;
@@ -1070,7 +1112,7 @@
 
       <div class="panel" id="planPanel">
         <h2>献立</h2>
-        <div id="planDays" class="empty">まだ作成されていません。</div>
+        <div id="planDays" class="empty"><strong>👉 まずは献立を作りましょう</strong><br>上の「冷蔵庫の食材」「食べたいもの」などを入力してから、<br>「献立と買い物リストを作る」ボタンを押してください。</div>
       </div>
 
       <div class="panel" id="shoppingPanel">
@@ -1082,7 +1124,7 @@
           <button id="finalizePlanTop">これで決定して保存</button>
           <button class="secondary" id="openSavedPlansTop">保存済みを見る</button>
         </div>
-        <div id="shoppingList" class="empty">まだ作成されていません。</div>
+        <div id="shoppingList" class="empty">献立を作ると、ここに買い物リストが出ます。</div>
         <div class="button-row final-actions">
           <button id="finalizePlan">これで決定して保存</button>
           <button class="secondary" id="openSavedPlans">保存済みを見る</button>
@@ -1093,34 +1135,55 @@
   </div>
 </div>
 
+<div class="modal" id="introModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true">
+    <h2 style="margin-top:0;">コンメモへようこそ</h2>
+    <p style="font-size:14px;line-height:1.7;margin-bottom:14px;">買い物前に1週間の献立をまとめて整理できるアプリです。</p>
+    <ol style="padding-left:20px;font-size:14px;line-height:1.8;margin:0 0 16px;">
+      <li><strong>冷蔵庫にあるもの</strong>を入力<br><span style="color:var(--text-muted);font-size:13px;">残っている食材から献立を組み立てます</span></li>
+      <li><strong>食べたいもの</strong>や<strong>買いたいもの</strong>を書く<br><span style="color:var(--text-muted);font-size:13px;">特売チラシをコピペでもOK</span></li>
+      <li><strong>「献立と買い物リストを作る」</strong>ボタンを押す<br><span style="color:var(--text-muted);font-size:13px;">1週間の献立と買い物リストが自動で出ます</span></li>
+      <li>スーパーで<strong>「保存済みを見る」</strong>から確認しながら買い物</li>
+    </ol>
+    <button id="closeIntro" style="width:100%;">はじめる</button>
+  </div>
+</div>
 <div class="modal" id="optionsModal" aria-hidden="true">
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="optionsTitle">
     <div class="modal-head">
       <h2 id="optionsTitle">オプション</h2>
       <button class="secondary" id="closeOptions">閉じる</button>
     </div>
-    <label class="lbl" for="dislikedText">嫌いな食材</label>
-    <textarea id="dislikedText" placeholder="例：なす、さば、きのこ"></textarea>
-    <label class="lbl" style="margin-top:12px;">アレルギー</label>
-    <div id="allergyChecks">
-      <div class="checks allergy-checks" id="allergyRequiredChecks"></div>
-      <details class="allergy-more">
-        <summary>その他アレルギー品目</summary>
-        <div class="checks allergy-checks" id="allergyRecommendedChecks"></div>
-      </details>
+    <div class="opt-section">
+      <label class="lbl" for="dislikedText">🚫 嫌いな食材</label>
+      <textarea id="dislikedText" placeholder="例：なす、さば、きのこ"></textarea>
     </div>
-    <label class="lbl" for="allergyText" style="margin-top:12px;">その他のアレルギー・避けたい原材料</label>
-    <textarea id="allergyText" placeholder="例：牡蠣、青魚&#10;市販ソースなどの原材料もできる範囲で避けます。"></textarea>
-    <label class="lbl" for="timeLimit" style="margin-top:12px;">調理時間の上限</label>
-    <select id="timeLimit">
-      <option value="0">制限なし</option>
-      <option value="15">15分以内</option>
-      <option value="20">20分以内</option>
-      <option value="30">30分以内</option>
-      <option value="40">40分以内</option>
-    </select>
-    <label class="lbl" for="favoriteText" style="margin-top:12px;">お気に入り料理</label>
-    <textarea id="favoriteText" placeholder="例：親子丼、豚汁、スパゲティサラダ"></textarea>
+    <div class="opt-section">
+      <label class="lbl">⚠️ アレルギー</label>
+      <div id="allergyChecks">
+        <div class="checks allergy-checks" id="allergyRequiredChecks"></div>
+        <details class="allergy-more">
+          <summary>その他アレルギー品目</summary>
+          <div class="checks allergy-checks" id="allergyRecommendedChecks"></div>
+        </details>
+      </div>
+      <label class="lbl" for="allergyText" style="margin-top:12px;">その他の原材料も避けたい</label>
+      <textarea id="allergyText" placeholder="例：牡蠣、青魚&#10;市販ソースなどの原材料もできる範囲で避けます"></textarea>
+    </div>
+    <div class="opt-section">
+      <label class="lbl" for="timeLimit">⏱ 調理時間の上限</label>
+      <select id="timeLimit">
+        <option value="0">制限なし</option>
+        <option value="15">15分以内</option>
+        <option value="20">20分以内</option>
+        <option value="30">30分以内</option>
+        <option value="40">40分以内</option>
+      </select>
+    </div>
+    <div class="opt-section">
+      <label class="lbl" for="favoriteText">⭐ お気に入り料理</label>
+      <textarea id="favoriteText" placeholder="例：親子丼、豚汁、スパゲティサラダ"></textarea>
+    </div>
   </div>
 </div>
 
@@ -3620,10 +3683,10 @@ function renderAll(ctx, manualStrategy = "") {
     const card = `<div class="day${locked ? " locked" : ""}"><div class="day-title"><span>${DAYS[p.day]}曜日</span><span class="time-total">計${totalTime}分</span></div><div class="dish">主菜：${p.main.name}</div><div class="meta">${sideSummary(p.sides)}</div><div>${badges}${lockBadges}</div>${renderDayRecipes(p, ctx.people)}<div class="day-actions"><button class="${mainLocked ? "" : "secondary"}" data-lock-main-day="${p.day}">${mainLocked ? "主菜固定を外す" : "主菜を残す"}</button>${sideLockButtons(p)}<button class="${isWholeLocked(p.day) ? "" : "secondary"}" data-lock-day="${p.day}">${isWholeLocked(p.day) ? "全部固定を外す" : "全部残す"}</button><button class="shuffle-btn" data-shuffle-day="${p.day}" title="この日のメニューを変える">🔀 別メニューに</button></div></div>`;
     const next = currentPlan[index + 1];
     return next ? card + daySwapButton(p.day, next.day) : card;
-  }).join("") || `<div class="empty">まだ作成されていません。</div>`;
+  }).join("") || `<div class="empty"><strong>👉 まずは献立を作りましょう</strong><br>上の「冷蔵庫の食材」「食べたいもの」などを入力してから、<br>「献立と買い物リストを作る」ボタンを押してください。</div>`;
   const groups = {};
   currentShopping.forEach(it => { const c = catFor(it.name); if (!groups[c]) groups[c] = []; groups[c].push(it); });
-  document.getElementById("shoppingList").innerHTML = Object.keys(groups).length ? orderedGroupEntries(groups).map(([cat, items]) => `<div class="shopping-group"><div class="shopping-title">${escapeHtml(cat)}</div>${items.map(renderShoppingItem).join("")}</div>`).join("") : `<div class="empty">買うものはありません。</div>`;
+  document.getElementById("shoppingList").innerHTML = Object.keys(groups).length ? orderedGroupEntries(groups).map(([cat, items]) => `<div class="shopping-group"><div class="shopping-title">${escapeHtml(cat)}</div>${items.map(renderShoppingItem).join("")}</div>`).join("") : (currentPlan.length ? `<div class="empty">🎉 必要なものは家にあります！買い物の必要なし。</div>` : `<div class="empty">献立を作ると、ここに買い物リストが出ます。</div>`);
 }
 function textOutput() {
   const buyItems = currentShopping.filter(x => shoppingAmount(x) > 0.01);
@@ -3945,6 +4008,17 @@ async function bootApp() {
     return;
   }
   load();
+  if (!localStorage.getItem("konmemo_seen_intro")) {
+    const introModal = document.getElementById("introModal");
+    introModal.classList.add("show");
+    introModal.setAttribute("aria-hidden", "false");
+    document.getElementById("closeIntro").addEventListener("click", () => {
+      introModal.classList.remove("show");
+      introModal.setAttribute("aria-hidden", "true");
+      localStorage.setItem("konmemo_seen_intro", "1");
+    });
+    introModal.addEventListener("click", e => { if (e.target === introModal) document.getElementById("closeIntro").click(); });
+  }
 }
 bootApp();
 
