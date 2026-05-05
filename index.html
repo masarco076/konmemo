@@ -61,7 +61,7 @@
     --tx: 180ms ease;
   }
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
+  html { -webkit-text-size-adjust: 100%; touch-action: manipulation; }
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", "Segoe UI", sans-serif;
@@ -736,24 +736,18 @@
   }
   .tabs button {
     flex: 1;
-    min-height: 52px;
-    border-radius: var(--r-md);
+    min-height: 44px;
+    border-radius: var(--r-full);
     background: transparent;
     color: var(--text-muted);
-    padding: 6px 4px;
+    padding: 8px 4px;
     border: 0;
+    font-size: 12px;
+    font-weight: 700;
     white-space: nowrap;
     box-shadow: none;
     transition: background var(--tx), color var(--tx);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
   }
-  .tab-icon { font-size: 19px; line-height: 1; filter: grayscale(0.3); transition: filter var(--tx); }
-  .tab-label { font-size: 10px; font-weight: 700; line-height: 1.2; letter-spacing: 0.02em; }
-  .tabs button.active .tab-icon { filter: none; }
   .tabs button:hover { background: var(--primary-tint); color: var(--primary-deep); }
   .tabs button.active {
     color: #fff;
@@ -947,6 +941,26 @@
     .modal-card { padding: 14px; border-radius: var(--r-md); }
   }
 
+  .modal-close {
+    width: 36px;
+    height: 36px;
+    min-height: 36px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--surface-soft);
+    color: var(--text-muted);
+    border: 0;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    transition: background var(--tx), color var(--tx);
+  }
+  .modal-close:hover { background: var(--border); color: var(--text); box-shadow: none; }
   .app-version {
     display: inline-flex;
     align-items: center;
@@ -1024,7 +1038,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <span class="app-version" id="appVersion">v35</span>
+      <span class="app-version" id="appVersion">v36</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
@@ -1221,7 +1235,7 @@
   <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="optionsTitle">
     <div class="modal-head">
       <h2 id="optionsTitle">オプション</h2>
-      <button class="secondary" id="closeOptions">閉じる</button>
+      <button class="modal-close" id="closeOptions" type="button" aria-label="閉じる" title="閉じる">✕</button>
     </div>
     <div class="opt-section">
       <label class="lbl" for="dislikedText">🚫 嫌いな食材</label>
@@ -1269,7 +1283,7 @@
   <div class="modal-card saved-modal-card" role="dialog" aria-modal="true" aria-labelledby="savedTitle">
     <div class="modal-head">
       <h2 id="savedTitle">保存済みの献立と買い物リスト</h2>
-      <button class="secondary" id="closeSavedPlans">閉じる</button>
+      <button class="modal-close" id="closeSavedPlans" type="button" aria-label="閉じる" title="閉じる">✕</button>
     </div>
     <div class="button-row saved-toolbar">
       <button class="secondary" id="deleteSelectedSaved">選択削除</button>
@@ -1280,10 +1294,10 @@
 </div>
 
 <nav class="tabs">
-  <button data-scroll="inputPanel" class="active"><span class="tab-icon">📝</span><span class="tab-label">メモ</span></button>
-  <button data-scroll="strategyPanel"><span class="tab-icon">💡</span><span class="tab-label">作戦</span></button>
-  <button data-scroll="planPanel"><span class="tab-icon">🍽</span><span class="tab-label">献立</span></button>
-  <button data-scroll="shoppingPanel"><span class="tab-icon">🛒</span><span class="tab-label">買い物</span></button>
+  <button data-scroll="inputPanel" class="active">買い物メモ</button>
+  <button data-scroll="strategyPanel">今週の作戦</button>
+  <button data-scroll="planPanel">献立</button>
+  <button data-scroll="shoppingPanel">買い物リスト</button>
 </nav>
 
 <script>
