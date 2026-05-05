@@ -1046,7 +1046,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <span class="app-version" id="appVersion">v38</span>
+      <span class="app-version" id="appVersion">v39</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
@@ -3082,14 +3082,25 @@ function preferredSideType(sideIndex, sides) {
   const hasSoup = sides.some(side => sideType(side) === "汁物");
   return hasSoup ? "和え物" : "汁物";
 }
+const FISH_INGREDIENTS = new Set(["鮭","さば","ぶり","たら","あじ","さんま","いわし","まぐろ","かつお","しらす","たこ","あさり","ほたて","牡蠣","えび","いか","サーモン","塩鮭","さわら","カレイ","ほっけ","めかじき","明太子","たらこ","ちりめんじゃこ","サバ缶","冷凍シーフードミックス","冷凍むきえび","冷凍ホタテ"]);
+const CHICKEN_INGREDIENTS = new Set(["鶏もも肉","鶏むね肉","鶏ひき肉","鶏ささみ","手羽元","手羽先","鶏手羽中","鶏レバー","砂肝","鶏肉","サラダチキン","冷凍からあげ","冷凍唐揚げ"]);
+const PORK_INGREDIENTS = new Set(["豚こま肉","豚バラ肉","豚ひき肉","豚肉","豚ロース肉","豚バラ薄切り","豚切り落とし","豚肩ロース肉","豚ロース薄切り","ハム","ベーコン","ウインナー","ソーセージ","ロースハム","生ハム","焼き豚","チャーシュー"]);
+const BEEF_INGREDIENTS = new Set(["牛こま肉","牛ひき肉","牛肉","牛バラ肉","牛切り落とし","牛肩ロース肉","合いびき肉"]);
+const SOY_INGREDIENTS = new Set(["豆腐","厚揚げ","油揚げ","納豆","絹豆腐","木綿豆腐","高野豆腐","がんもどき","焼き豆腐","豆乳"]);
 function proteinType(recipe) {
   const ing = Object.keys(recipe.ing);
-  if (ing.some(n => ["鮭","さば"].includes(n))) return "魚";
-  if (ing.some(n => ["鶏もも肉","鶏むね肉"].includes(n))) return "鶏";
-  if (ing.some(n => ["豚こま肉","豚バラ肉","豚ひき肉","合いびき肉"].includes(n))) return "豚";
+  if (ing.some(n => FISH_INGREDIENTS.has(n))) return "魚";
+  if (ing.some(n => BEEF_INGREDIENTS.has(n))) return "牛";
+  if (ing.some(n => PORK_INGREDIENTS.has(n))) return "豚";
+  if (ing.some(n => CHICKEN_INGREDIENTS.has(n))) return "鶏";
+  if (ing.some(n => SOY_INGREDIENTS.has(n))) return "豆";
   if (ing.includes("卵")) return "卵";
-  if (ing.includes("豆腐")) return "豆腐";
   return "野菜";
+}
+function majorProtein(p) {
+  if (p === "魚") return "魚";
+  if (p === "牛" || p === "豚" || p === "鶏") return "肉";
+  return "その他";
 }
 function vegetableCount(recipe) {
   return Object.keys(recipe.ing).filter(n => CATEGORIES.野菜.includes(n)).length;
@@ -3290,6 +3301,11 @@ function scoreRecipe(r, ctx, used, dayIndex, opts = {}) {
   if (ctx.genres.length) score += ctx.genres.includes(genre) ? 12 : (isUserPicked ? 0 : -35);
   const protein = proteinType(r);
   const proteinUsed = opts.proteinCounts?.[protein] || 0;
+  const proteinMajor = majorProtein(protein);
+  const majorCount = Object.entries(opts.proteinCounts || {}).reduce((sum, [p, c]) => majorProtein(p) === proteinMajor ? sum + c : sum, 0);
+  if (!isUserPicked) {
+    score -= Math.max(0, majorCount - 1) * 22;
+  }
   if (ctx.preferredProteins?.includes(protein)) score += 18;
   if (ctx.commercial === true) score += isCommercialRecipe(r) ? 30 : -8;
   if (ctx.commercial === false) score += isCommercialRecipe(r) ? -45 : 10;
