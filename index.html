@@ -359,36 +359,56 @@
   }
   .expiry-cell .hidden { display: none; }
 
-  .checks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+  .checks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
   .checks label, .toggle {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    border: 1px solid var(--border);
+    border: 1.5px solid var(--border);
     border-radius: var(--r-full);
-    padding: 8px 4px;
+    padding: 10px 8px;
     background: var(--surface);
     font-size: 13px;
+    color: var(--text-muted);
     cursor: pointer;
-    transition: background var(--tx), border-color var(--tx), color var(--tx);
-    min-height: 38px;
+    transition: all 180ms ease;
+    min-height: 42px;
     min-width: 0;
     text-align: center;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
   }
-  .checks label:hover, .toggle:hover { background: var(--primary-tint); border-color: var(--primary-border); }
-  .checks label:has(input:checked), .toggle:has(input:checked) {
-    background: var(--primary-soft);
-    border-color: var(--primary);
+  .checks label input, .toggle input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    pointer-events: none;
+  }
+  .checks label:hover, .toggle:hover {
+    background: var(--primary-tint);
+    border-color: var(--primary-border);
     color: var(--primary-deep);
+  }
+  .checks label:has(input:checked), .toggle:has(input:checked) {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
     font-weight: 700;
+    box-shadow: 0 2px 8px rgba(30,196,122,0.28);
+  }
+  .checks label:has(input:checked):hover, .toggle:has(input:checked):hover {
+    background: var(--primary-hover);
+    border-color: var(--primary-hover);
   }
   .allergy-checks {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 6px;
+    gap: 8px;
   }
-  .allergy-checks label { min-width: 0; border-radius: var(--r-sm); padding: 8px 10px; font-size: 13px; }
+  .allergy-checks label { min-width: 0; padding: 10px 8px; font-size: 13px; }
   .allergy-more { margin-top: 8px; }
   .allergy-more summary {
     cursor: pointer;
@@ -980,7 +1000,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <span class="app-version" id="appVersion">v33</span>
+      <span class="app-version" id="appVersion">v34</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
