@@ -303,16 +303,34 @@
   .final-actions { margin-top: 10px; }
   .primary-action {
     width: 100%;
-    padding: 16px;
-    font-size: 16px;
-    margin-top: 12px;
+    padding: 18px;
+    font-size: 17px;
+    font-weight: 800;
+    margin-top: 14px;
     border-radius: var(--r-full);
-    background: var(--primary);
-    min-height: 52px;
-    box-shadow: 0 6px 16px rgba(30,196,122,0.3);
+    background: linear-gradient(135deg, #2ad885 0%, #18a567 100%);
+    min-height: 56px;
+    box-shadow: 0 8px 22px rgba(30,196,122,0.4), 0 1px 0 rgba(255,255,255,0.3) inset;
     letter-spacing: 0.04em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
   }
-  .primary-action:hover { background: var(--primary-hover); box-shadow: 0 8px 20px rgba(30,196,122,0.36); transform: translateY(-1px); }
+  .primary-action::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .primary-action:hover {
+    background: linear-gradient(135deg, #25c97a 0%, #128559 100%);
+    box-shadow: 0 12px 28px rgba(30,196,122,0.48), 0 1px 0 rgba(255,255,255,0.3) inset;
+    transform: translateY(-2px);
+  }
+  .primary-action:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(30,196,122,0.34); }
 
   .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
@@ -718,18 +736,24 @@
   }
   .tabs button {
     flex: 1;
-    min-height: 48px;
-    border-radius: var(--r-full);
+    min-height: 52px;
+    border-radius: var(--r-md);
     background: transparent;
     color: var(--text-muted);
-    padding: 8px 4px;
+    padding: 6px 4px;
     border: 0;
-    font-size: 12px;
-    font-weight: 700;
     white-space: nowrap;
     box-shadow: none;
     transition: background var(--tx), color var(--tx);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
   }
+  .tab-icon { font-size: 19px; line-height: 1; filter: grayscale(0.3); transition: filter var(--tx); }
+  .tab-label { font-size: 10px; font-weight: 700; line-height: 1.2; letter-spacing: 0.02em; }
+  .tabs button.active .tab-icon { filter: none; }
   .tabs button:hover { background: var(--primary-tint); color: var(--primary-deep); }
   .tabs button.active {
     color: #fff;
@@ -1000,7 +1024,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <span class="app-version" id="appVersion">v34</span>
+      <span class="app-version" id="appVersion">v35</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
@@ -1131,7 +1155,7 @@
           </div>
         </div>
 
-        <button class="primary-action" id="makePlan">献立と買い物リストを作る</button>
+        <button class="primary-action" id="makePlan"><span style="font-size:18px;margin-right:6px;">✨</span>献立と買い物リストを作る</button>
       </section>
     </main>
 
@@ -1256,10 +1280,10 @@
 </div>
 
 <nav class="tabs">
-  <button data-scroll="inputPanel" class="active">買い物メモ</button>
-  <button data-scroll="strategyPanel">今週の作戦</button>
-  <button data-scroll="planPanel">献立</button>
-  <button data-scroll="shoppingPanel">買い物リスト</button>
+  <button data-scroll="inputPanel" class="active"><span class="tab-icon">📝</span><span class="tab-label">メモ</span></button>
+  <button data-scroll="strategyPanel"><span class="tab-icon">💡</span><span class="tab-label">作戦</span></button>
+  <button data-scroll="planPanel"><span class="tab-icon">🍽</span><span class="tab-label">献立</span></button>
+  <button data-scroll="shoppingPanel"><span class="tab-icon">🛒</span><span class="tab-label">買い物</span></button>
 </nav>
 
 <script>
