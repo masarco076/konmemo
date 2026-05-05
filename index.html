@@ -1226,7 +1226,28 @@ const ITEM_ALIASES = [
   {patterns:["ムニエル","鮭ムニエル","鮭のムニエル"], item:"鮭", recipe:"鮭のムニエル"},
   {patterns:["カルボナーラ","カルボナーラソース","パスタソースカルボナーラ","パスタソース(カルボナーラ)","パスタ（カルボナーラ）"], item:"パスタソース(カルボナーラ)", recipe:"カルボナーラパスタ（市販ソース）"},
   {patterns:["スパサラ","スパサラダ","スパゲティサラダ","スパゲッティサラダ","スパゲティーサラダ"], item:"パスタ", recipe:"スパゲティサラダ"},
-  {patterns:["スパゲティ","スパゲッティ","スパゲティー"], item:"パスタ"}
+  {patterns:["スパゲティ","スパゲッティ","スパゲティー"], item:"パスタ"},
+  {patterns:["そば","蕎麦","ソバ"], item:"そば", recipe:"ざるそば"},
+  {patterns:["うどん"], item:"うどん", recipe:"野菜たっぷりうどん"},
+  {patterns:["ピザ","ピッツァ"], item:"冷凍ピザ", recipe:"冷凍ピザ"},
+  {patterns:["ラーメン","らーめん"], item:"中華麺", recipe:"担々麺"},
+  {patterns:["ドリア"], item:"米", recipe:"冷凍ドリア"},
+  {patterns:["とんかつ","トンカツ","トンカツ"], item:"豚ロース肉", recipe:"豚ロースのとんかつ"},
+  {patterns:["焼きそば","ヤキソバ","やきそば"], item:"焼きそば麺", recipe:"焼きそば"},
+  {patterns:["パスタ"], item:"パスタ", recipe:"トマトチーズパスタ"},
+  {patterns:["パエリア"], item:"米", recipe:"パエリア"},
+  {patterns:["リゾット"], item:"米", recipe:"リゾット"},
+  {patterns:["タコス"], item:"トルティーヤ", recipe:"タコス"},
+  {patterns:["ブリトー"], item:"トルティーヤ", recipe:"ブリトー"},
+  {patterns:["コロッケ"], item:"冷凍コロッケ", recipe:"冷凍コロッケ（温めるだけ）"},
+  {patterns:["シューマイ","焼売"], item:"冷凍シューマイ", recipe:"冷凍シューマイ（温めるだけ）"},
+  {patterns:["天ぷら","てんぷら"], item:"鶏ささみ", recipe:"鶏ささみの天ぷら"},
+  {patterns:["お好み焼き","おこのみやき"], item:"キャベツ", recipe:"豚玉お好み焼き"},
+  {patterns:["たこ焼き","タコ焼き"], item:"冷凍たこ焼き", recipe:"冷凍たこ焼き（温めるだけ）"},
+  {patterns:["ステーキ"], item:"牛肉", recipe:"牛肉のステーキ"},
+  {patterns:["丼","どんぶり","ドンブリ"], item:"米", recipe:"親子丼"},
+  {patterns:["寿司","すし"], item:"米"},
+  {patterns:["味噌汁","みそ汁","みそしる"], item:"味噌"}
 ];
 const LOCAL_STANDARD_MAIN_TARGET = 300;
 const LOCAL_STANDARD_SIDE_TARGET = 400;
@@ -2951,17 +2972,25 @@ function renderDayRecipes(planDay, peopleCount) {
   return `<details class="recipe-detail"><summary>この日のレシピをまとめて見る</summary>${dishes.map(d => renderDishRecipe(d.recipe, d.label, peopleCount)).join("")}</details>`;
 }
 function matchedRecipeNames(rawValue) {
-  const raw = normalizeMemo(rawValue);
-  if (!raw) return [];
-  const aliasRecipes = ITEM_ALIASES.filter(a => a.recipe && a.patterns.some(p => raw.includes(normalizeMemo(p)))).map(a => a.recipe);
+  if (!rawValue) return [];
   const recipeNames = RECIPES.concat(SIDES).map(r => r.name);
-  const exactRecipes = recipeNames.filter(name => raw.includes(normalizeMemo(name)));
-  const partialRecipes = exactRecipes.length ? [] : recipeNames.filter(name => raw.length >= 4 && normalizeMemo(name).includes(raw));
-  const directRecipes = exactRecipes.concat(partialRecipes);
-  const recipes = directRecipes.length
-    ? directRecipes.concat(aliasRecipes.filter(name => directRecipes.includes(name)))
-    : aliasRecipes;
-  return recipes.filter((v, i, arr) => arr.indexOf(v) === i);
+  const segments = String(rawValue).split(/[\n、,，・\s／\/]+|と(?=[ぁ-ん])/).map(s => s.trim()).filter(Boolean);
+  const picks = [];
+  segments.forEach(seg => {
+    const segNorm = normalizeMemo(seg);
+    if (!segNorm) return;
+    const exactName = recipeNames.find(name => normalizeMemo(name) === segNorm);
+    if (exactName) { if (!picks.includes(exactName)) picks.push(exactName); return; }
+    const containsName = recipeNames.find(name => segNorm.includes(normalizeMemo(name)));
+    if (containsName) { if (!picks.includes(containsName)) picks.push(containsName); return; }
+    const aliasHit = ITEM_ALIASES.find(a => a.recipe && a.patterns.some(p => segNorm.includes(normalizeMemo(p)) || normalizeMemo(p).includes(segNorm)));
+    if (aliasHit) { if (!picks.includes(aliasHit.recipe)) picks.push(aliasHit.recipe); return; }
+    if (segNorm.length >= 3) {
+      const partial = recipeNames.find(name => normalizeMemo(name).includes(segNorm));
+      if (partial && !picks.includes(partial)) picks.push(partial);
+    }
+  });
+  return picks;
 }
 function wantedRecipeNames() {
   return matchedRecipeNames(wantText.value);
