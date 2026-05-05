@@ -1163,6 +1163,7 @@ let ALLERGEN_REQUIRED_ITEMS = [];
 let ALLERGEN_RECOMMENDED_ITEMS = [];
 let ALLERGEN_ITEMS = [];
 let ALLERGEN_MAP = {};
+let ITEM_SYNONYMS = {};
 async function loadIngredientData() {
   const res = await fetch("ingredients.json", {cache: "no-cache"});
   if (!res.ok) throw new Error("ingredients.json の読み込みに失敗 (" + res.status + ")");
@@ -1182,6 +1183,7 @@ async function loadIngredientData() {
   ALLERGEN_ITEMS = ALLERGEN_REQUIRED_ITEMS.concat(ALLERGEN_RECOMMENDED_ITEMS);
   ALLERGEN_MAP = data.allergenMap || {};
   DEFAULT_PURCHASE_AMOUNTS = data.defaultPurchaseAmounts || {};
+  ITEM_SYNONYMS = data.synonyms || {};
 }
 // レシピデータは recipes.json から動的に読み込み（bootApp で初期化）
 let RARE_RECIPES = new Set();
@@ -1777,8 +1779,12 @@ function knownItemName(rawName) {
   const known = Object.keys(UNITS).concat(["生姜","カレー粉","バター","マヨネーズ","だし","めんつゆ","鶏ガラスープの素","にんにく","塩昆布","ソース","ケチャップ"]);
   const exact = known.find(k => normalizeMemo(k) === raw);
   if (exact) return exact;
+  const synonymHit = Object.entries(ITEM_SYNONYMS).find(([syn]) => normalizeMemo(syn) === raw);
+  if (synonymHit) return synonymHit[1];
   const alias = ITEM_ALIASES.find(a => a.patterns.some(p => raw.includes(normalizeMemo(p))));
   if (alias) return alias.item;
+  const synonymPartial = Object.entries(ITEM_SYNONYMS).find(([syn]) => raw.includes(normalizeMemo(syn)) || normalizeMemo(syn).includes(raw));
+  if (synonymPartial) return synonymPartial[1];
   return known.find(k => raw.includes(normalizeMemo(k)) || normalizeMemo(k).includes(raw)) || rawName.trim();
 }
 function expiryModeForName(rawName, item) {
@@ -3880,6 +3886,27 @@ document.querySelectorAll(".tabs button").forEach(btn => btn.addEventListener("c
   document.getElementById(btn.dataset.scroll).scrollIntoView({behavior:"smooth"});
   document.querySelectorAll(".tabs button").forEach(tab => tab.classList.toggle("active", tab === btn));
 }));
+function checkDataIntegrity() {
+  const allUnits = Object.keys(UNITS);
+  const usedInRecipes = new Set();
+  RECIPES.forEach(r => Object.keys(r.ing || {}).forEach(n => usedInRecipes.add(n)));
+  SIDES.forEach(r => Object.keys(r.ing || {}).forEach(n => usedInRecipes.add(n)));
+  const recipeNeeds = [...usedInRecipes].filter(n => !allUnits.includes(n) && !PANTRY.has(n) && !SEASONINGS.has(n));
+  const unused = allUnits.filter(n => !usedInRecipes.has(n));
+  const result = {
+    totalIngredients: allUnits.length,
+    totalRecipes: RECIPES.length + SIDES.length,
+    unusedIngredients: unused,
+    missingIngredients: recipeNeeds,
+    summary: `食材${allUnits.length}種 / レシピ${RECIPES.length + SIDES.length}種 / 未使用${unused.length}件 / 未登録${recipeNeeds.length}件`
+  };
+  console.log("=== データ整合性チェック ===");
+  console.log(result.summary);
+  if (recipeNeeds.length) console.warn("レシピで使用されているが ingredients.json に未登録:", recipeNeeds);
+  if (unused.length) console.log("未使用食材（将来用に保持）:", unused.length, "件");
+  return result;
+}
+window.checkDataIntegrity = checkDataIntegrity;
 async function bootApp() {
   try {
     await Promise.all([loadIngredientData(), loadRecipeData()]);
