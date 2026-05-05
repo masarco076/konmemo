@@ -276,6 +276,12 @@
     background: var(--primary);
     border-color: var(--primary);
     color: #fff;
+    animation: micListen 1.2s ease-in-out infinite;
+  }
+  @keyframes micListen {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(30,196,122,0.55); }
+    50% { transform: scale(1.15); box-shadow: 0 0 0 14px rgba(30,196,122,0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(30,196,122,0); }
   }
 
   .fridge-title, .voice-title {
@@ -370,10 +376,12 @@
     box-shadow: none;
     justify-self: end;
   }
-  .fridge-row > button:hover {
-    background: var(--warning);
-    color: #fff;
-    box-shadow: none;
+  @media (hover: hover) {
+    .fridge-row > button:hover {
+      background: var(--warning);
+      color: #fff;
+      box-shadow: none;
+    }
   }
   .expiry-cell .hidden { display: none; }
 
@@ -1038,7 +1046,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <span class="app-version" id="appVersion">v36</span>
+      <span class="app-version" id="appVersion">v37</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
@@ -1402,7 +1410,8 @@ const ITEM_ALIASES = [
   {patterns:["ステーキ"], item:"牛肉", recipe:"牛肉のステーキ"},
   {patterns:["丼","どんぶり","ドンブリ"], item:"米", recipe:"親子丼"},
   {patterns:["寿司","すし"], item:"米"},
-  {patterns:["味噌汁","みそ汁","みそしる"], item:"味噌"}
+  {patterns:["味噌汁","みそ汁","みそしる"], item:"味噌"},
+  {patterns:["あんかけスパ","あんかけパスタ","アンカケスパ"], item:"パスタ", recipe:"あんかけスパゲッティ"}
 ];
 const LOCAL_STANDARD_MAIN_TARGET = 300;
 const LOCAL_STANDARD_SIDE_TARGET = 400;
