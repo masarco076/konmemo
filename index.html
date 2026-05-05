@@ -954,6 +954,12 @@
 </style>
 </head>
 <body>
+<div id="bootSplash" style="position:fixed;inset:0;background:var(--bg, #c8ead4);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:-apple-system,'Hiragino Sans','Yu Gothic',sans-serif;">
+  <div style="font-size:24px;font-weight:800;color:var(--primary, #1ec47a);margin-bottom:16px;letter-spacing:0.04em;">コンメモ</div>
+  <div style="width:32px;height:32px;border:3px solid var(--primary-soft, #e8f9f0);border-top-color:var(--primary, #1ec47a);border-radius:50%;animation:bootSpin 0.8s linear infinite;"></div>
+  <div style="margin-top:14px;font-size:13px;color:var(--text-muted, #5f6770);">読み込み中…</div>
+</div>
+<style>@keyframes bootSpin { to { transform: rotate(360deg); } }</style>
 <div class="app">
   <header>
     <div>
@@ -1111,7 +1117,10 @@
       </div>
 
       <div class="panel" id="planPanel">
-        <h2>献立</h2>
+        <div class="panel-title">
+          <h2>献立</h2>
+          <button class="secondary" id="sharePlan" type="button" title="献立をシェア" style="padding:6px 12px;font-size:12px;min-height:32px;">📤 シェア</button>
+        </div>
         <div id="planDays" class="empty"><strong>👉 まずは献立を作りましょう</strong><br>上の「冷蔵庫の食材」「食べたいもの」などを入力してから、<br>「献立と買い物リストを作る」ボタンを押してください。</div>
       </div>
 
@@ -1123,6 +1132,7 @@
         <div class="button-row final-actions top-actions">
           <button id="finalizePlanTop">これで決定して保存</button>
           <button class="secondary" id="openSavedPlansTop">保存済みを見る</button>
+          <button class="secondary" id="copyShopping" type="button" title="買い物リストをコピー" style="padding:8px 12px;font-size:13px;">📋 コピー</button>
         </div>
         <div id="shoppingList" class="empty">献立を作ると、ここに買い物リストが出ます。</div>
         <div class="button-row final-actions">
@@ -1183,6 +1193,15 @@
     <div class="opt-section">
       <label class="lbl" for="favoriteText">⭐ お気に入り料理</label>
       <textarea id="favoriteText" placeholder="例：親子丼、豚汁、スパゲティサラダ"></textarea>
+    </div>
+    <div class="opt-section">
+      <label class="lbl">💾 データのバックアップ</label>
+      <p style="font-size:12px;color:var(--text-muted);margin:0 0 10px;line-height:1.5;">機種変更や万が一の時のために、入力データを保存／復元できます。</p>
+      <div class="button-row">
+        <button class="secondary" id="exportData" type="button">📥 書き出し</button>
+        <button class="secondary" id="importData" type="button">📤 読み込み</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
     </div>
   </div>
 </div>
@@ -3692,6 +3711,49 @@ function textOutput() {
   const buyItems = currentShopping.filter(x => shoppingAmount(x) > 0.01);
   return `買い物前の献立整理\n\n${strategy.value}\n\n献立\n${currentPlan.map(p => `${DAYS[p.day]}：${p.main.name} / ${sideSummary(p.sides)}`).join("\n")}\n\n買い物（合計${buyItems.length}品）\n${buyItems.map(x => `□ ${x.name} ${amountText(shoppingAmount(x),x.unit)}${x.sale ? "（買いたい）" : ""}`).join("\n")}`;
 }
+function shoppingTextOutput() {
+  const buyItems = currentShopping.filter(x => shoppingAmount(x) > 0.01);
+  if (!buyItems.length) return "🎉 買うものはありません！";
+  const groups = {};
+  buyItems.forEach(it => { const c = catFor(it.name); if (!groups[c]) groups[c] = []; groups[c].push(it); });
+  const lines = ["🛒 買い物リスト", `合計 ${buyItems.length}品`, ""];
+  orderedGroupEntries(groups).forEach(([cat, items]) => {
+    lines.push(`【${cat}】`);
+    items.forEach(it => lines.push(`☐ ${it.name} ${amountText(shoppingAmount(it), it.unit)}${it.sale ? " ✨" : ""}`));
+    lines.push("");
+  });
+  return lines.join("\n").trim();
+}
+function planTextOutput() {
+  if (!currentPlan.length) return "まだ献立が作成されていません。";
+  const lines = ["🍽 1週間の献立", ""];
+  currentPlan.forEach(p => {
+    const total = [p.main, ...(p.sides || [])].reduce((s, d) => s + d.time, 0);
+    lines.push(`${DAYS[p.day]}曜日（計${total}分）`);
+    lines.push(`主菜：${p.main.name}`);
+    (p.sides || []).forEach((s, i) => lines.push(`副菜${i + 1}：${s.name}`));
+    lines.push("");
+  });
+  return lines.join("\n").trim();
+}
+async function copyToClipboard(text, btn) {
+  try {
+    await navigator.clipboard.writeText(text);
+    if (btn) {
+      const original = btn.textContent;
+      btn.textContent = "✓ コピーしました";
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    }
+  } catch (e) {
+    alert("コピーに失敗しました");
+  }
+}
+async function shareText(title, text, btn) {
+  if (navigator.share) {
+    try { await navigator.share({title, text}); return; } catch (e) { if (e.name === "AbortError") return; }
+  }
+  copyToClipboard(text, btn);
+}
 function fillSelectors() {
   targetItems.innerHTML = `<option value="0">制限なし</option>`;
   for (let i = 5; i <= 30; i += 5) {
@@ -3897,6 +3959,35 @@ document.getElementById("shoppingList").addEventListener("click", e => {
   renderAll(getContext(), strategy.value);
   save();
 });
+document.getElementById("sharePlan")?.addEventListener("click", e => shareText("献立", planTextOutput(), e.currentTarget));
+document.getElementById("copyShopping")?.addEventListener("click", e => copyToClipboard(shoppingTextOutput(), e.currentTarget));
+document.getElementById("exportData")?.addEventListener("click", () => {
+  const data = localStorage.getItem("preShopPlanner_v1") || "{}";
+  const blob = new Blob([data], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const today = new Date().toISOString().slice(0, 10);
+  a.href = url; a.download = `konmemo-backup-${today}.json`;
+  a.click(); URL.revokeObjectURL(url);
+});
+document.getElementById("importData")?.addEventListener("click", () => document.getElementById("importFile").click());
+document.getElementById("importFile")?.addEventListener("change", e => {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      JSON.parse(ev.target.result);
+      if (!confirm("現在のデータを上書きします。よろしいですか？")) return;
+      localStorage.setItem("preShopPlanner_v1", ev.target.result);
+      alert("読み込み完了。アプリを再起動します。");
+      location.reload();
+    } catch (err) {
+      alert("ファイルが正しくありません。");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
 finalizePlan.addEventListener("click", finalizeCurrentPlan);
 finalizePlanTop.addEventListener("click", finalizeCurrentPlan);
 function openSavedModal() {
@@ -4008,6 +4099,12 @@ async function bootApp() {
     return;
   }
   load();
+  const splash = document.getElementById("bootSplash");
+  if (splash) {
+    splash.style.transition = "opacity 250ms ease";
+    splash.style.opacity = "0";
+    setTimeout(() => splash.remove(), 280);
+  }
   if (!localStorage.getItem("konmemo_seen_intro")) {
     const introModal = document.getElementById("introModal");
     introModal.classList.add("show");
