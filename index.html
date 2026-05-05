@@ -1046,7 +1046,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <span class="app-version" id="appVersion">v37</span>
+      <span class="app-version" id="appVersion">v38</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
@@ -3270,8 +3270,9 @@ function scoreRecipe(r, ctx, used, dayIndex, opts = {}) {
   let score = 10;
   const ingNames = Object.keys(r.ing);
   const activeWanted = opts.wantedNames || [];
-  if (activeWanted.includes(r.name)) score += 150;
-  else if (ctx.wantRecipes.includes(r.name) || ctx.strategyRecipes?.includes(r.name)) score += 60;
+  const isUserPicked = activeWanted.includes(r.name) || ctx.wantRecipes.includes(r.name) || ctx.strategyRecipes?.includes(r.name);
+  if (activeWanted.includes(r.name)) score += 200;
+  else if (ctx.wantRecipes.includes(r.name) || ctx.strategyRecipes?.includes(r.name)) score += 120;
   if (ctx.favorites?.includes(r.name)) score += 42;
   ctx.want.forEach(w => { if (ingNames.includes(w) || r.name.includes(w)) score += 18; });
   ctx.strategyItems?.forEach(w => { if (ingNames.includes(w) || r.name.includes(w)) score += 24; });
@@ -3285,8 +3286,8 @@ function scoreRecipe(r, ctx, used, dayIndex, opts = {}) {
   }
   ctx.pantry.forEach(p => { if (ingNames.includes(p)) score += ctx.want.includes(p) || ctx.sale.includes(p) ? 8 : 3; });
   const genre = genreFor(r);
-  if (opts.preferredGenre) score += genreMatches(r, opts.preferredGenre) ? 34 : -40;
-  if (ctx.genres.length) score += ctx.genres.includes(genre) ? 12 : -35;
+  if (opts.preferredGenre) score += genreMatches(r, opts.preferredGenre) ? 34 : (isUserPicked ? 0 : -40);
+  if (ctx.genres.length) score += ctx.genres.includes(genre) ? 12 : (isUserPicked ? 0 : -35);
   const protein = proteinType(r);
   const proteinUsed = opts.proteinCounts?.[protein] || 0;
   if (ctx.preferredProteins?.includes(protein)) score += 18;
