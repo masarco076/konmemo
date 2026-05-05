@@ -903,6 +903,20 @@
     .modal-card { padding: 14px; border-radius: var(--r-md); }
   }
 
+  .app-version {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-soft);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-full);
+    padding: 3px 9px;
+    letter-spacing: 0.05em;
+    height: 24px;
+    line-height: 1;
+  }
   .opt-section {
     background: var(--surface-soft);
     border: 1px solid var(--border-soft);
@@ -966,6 +980,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
+      <span class="app-version" id="appVersion">v33</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
