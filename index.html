@@ -6,7 +6,7 @@
 <title>コンメモ</title>
 <meta name="description" content="献立と買い物リストを整理するアプリ">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#1ec47a">
+<meta name="theme-color" content="#F8F1E4">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -1031,6 +1031,256 @@
       transition-duration: 0.01ms !important;
     }
   }
+
+  /* konmemo4 refresh: keep the mature PWA features, update the touch UI. */
+  :root {
+    --bg: #F8F1E4;
+    --surface: #ffffff;
+    --surface-soft: #FFF9EA;
+    --border: #E8E2D6;
+    --border-soft: #F0E8D8;
+    --text: #1F1B16;
+    --text-muted: #6B6357;
+    --text-soft: #A39E92;
+    --primary: #15110D;
+    --primary-hover: #2A241D;
+    --primary-deep: #15110D;
+    --primary-soft: #FFE9A3;
+    --primary-tint: #FFF6D5;
+    --primary-border: #F4C944;
+    --accent: #FF8C19;
+    --accent-soft: #FFF1DC;
+    --accent-border: #FFC4A0;
+    --warning: #E5705B;
+    --warning-hover: #C84F42;
+    --gold: #F4C944;
+    --gold-soft: #FFF6D5;
+    --pink: #D95D91;
+    --pink-soft: #FFD4D4;
+    --pink-border: #F2A7BB;
+    --mint: #1F7A53;
+    --mint-soft: #C7EEDB;
+    --mint-border: #9CDFBF;
+    --blue: #3B64B8;
+    --blue-soft: #CFE1FF;
+    --blue-border: #B7CDF7;
+    --purple: #6A55B8;
+    --purple-soft: #D9CCF2;
+    --purple-border: #C8B8EC;
+    --shadow-xs: 0 1px 2px rgba(31, 27, 22, 0.05);
+    --shadow-sm: 0 8px 18px rgba(31, 27, 22, 0.06);
+    --shadow-md: 0 14px 28px rgba(31, 27, 22, 0.08);
+    --shadow-lg: 0 22px 48px rgba(31, 27, 22, 0.18);
+    --r-sm: 10px;
+    --r-md: 14px;
+    --r-lg: 20px;
+    --tab-h: 76px;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 18% 4%, rgba(255, 227, 138, 0.36), transparent 28%),
+      linear-gradient(180deg, #FFF9EA 0%, var(--bg) 46%, #F4EAD8 100%);
+    font-size: 16px;
+    line-height: 1.65;
+    padding: max(16px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) calc(var(--tab-h) + 20px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+  }
+
+  .app { max-width: 620px; }
+
+  header {
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  h1 {
+    background: transparent;
+    box-shadow: none;
+    color: var(--text);
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: 0;
+    line-height: 1.12;
+    padding: 2px 0;
+  }
+
+  .app-version {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+    font-size: 11px;
+    height: 26px;
+  }
+
+  section,
+  .panel {
+    border-color: rgba(232, 226, 214, 0.92);
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 18px;
+  }
+
+  section + section,
+  .panel + .panel { margin-top: 16px; }
+
+  h2 {
+    font-size: 19px;
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+
+  h2::before {
+    background: var(--accent);
+    box-shadow: 0 0 0 5px var(--accent-soft);
+    height: 9px;
+    width: 9px;
+  }
+
+  h3 {
+    font-size: 15px;
+    line-height: 1.45;
+    margin: 18px 0 9px;
+  }
+
+  label.lbl {
+    font-size: 13px;
+    letter-spacing: 0;
+  }
+
+  input,
+  select,
+  textarea {
+    background: #fff;
+    border-color: var(--border);
+    border-radius: var(--r-md);
+    min-height: 48px;
+    padding: 13px 14px;
+  }
+
+  textarea {
+    min-height: 92px;
+  }
+
+  button {
+    box-shadow: none;
+    font-size: 15px;
+    font-weight: 800;
+    min-height: 44px;
+    padding: 11px 16px;
+  }
+
+  button:hover {
+    box-shadow: none;
+  }
+
+  button.secondary {
+    background: #fff;
+    color: var(--primary);
+  }
+
+  button.secondary:hover {
+    background: var(--primary-tint);
+  }
+
+  .primary-action {
+    background: var(--primary);
+    box-shadow: 0 12px 26px rgba(21, 17, 13, 0.2);
+    color: #fff;
+    letter-spacing: 0;
+    min-height: 58px;
+  }
+
+  .primary-action:hover {
+    background: var(--primary-hover);
+    box-shadow: 0 14px 30px rgba(21, 17, 13, 0.24);
+  }
+
+  .fridge-row,
+  .shopping-item,
+  .recipe-box,
+  .day,
+  .saved-card,
+  .opt-section,
+  .checks label,
+  .toggle {
+    border-color: var(--border);
+    border-radius: var(--r-md);
+  }
+
+  .fridge-row,
+  .shopping-item,
+  .recipe-box,
+  .saved-card {
+    background: #fff;
+  }
+
+  .count-badge {
+    background: var(--primary-soft);
+    color: var(--primary);
+    border: 1px solid var(--primary-border);
+  }
+
+  .tabs {
+    left: max(14px, env(safe-area-inset-left));
+    right: max(14px, env(safe-area-inset-right));
+    bottom: max(12px, env(safe-area-inset-bottom));
+    background: var(--primary);
+    border: 0;
+    border-radius: 28px;
+    box-shadow: 0 18px 34px rgba(21, 17, 13, 0.22);
+    gap: 6px;
+    padding: 8px;
+  }
+
+  .tabs button {
+    color: rgba(255, 255, 255, 0.72);
+    font-size: 12px;
+    min-height: 48px;
+  }
+
+  .tabs button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
+
+  .tabs button.active {
+    background: #fff;
+    color: var(--primary);
+    box-shadow: none;
+  }
+
+  .tabs button.active:hover {
+    background: #fff;
+    color: var(--primary);
+  }
+
+  @media (max-width: 820px) {
+    body {
+      padding-left: max(12px, env(safe-area-inset-left));
+      padding-right: max(12px, env(safe-area-inset-right));
+    }
+
+    h1 { font-size: 25px; }
+
+    section,
+    .panel {
+      padding: 16px;
+    }
+
+    .button-row {
+      gap: 8px;
+    }
+
+    .button-row button {
+      flex: 1 1 140px;
+    }
+
+    .tabs {
+      left: max(10px, env(safe-area-inset-left));
+      right: max(10px, env(safe-area-inset-right));
+      padding: 7px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -1046,7 +1296,7 @@
       <h1>買い物前の献立整理</h1>
     </div>
     <div class="header-actions">
-      <span class="app-version" id="appVersion">v39</span>
+      <span class="app-version" id="appVersion">v40</span>
       <button class="secondary settings-btn" id="openOptions" type="button" aria-label="オプション" title="オプション">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="12" r="3"></circle>
