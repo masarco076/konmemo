@@ -1,10 +1,12 @@
-const CACHE_NAME = "konmemo-v40";
+const CACHE_NAME = "konmemo-a-v1.4.4";
 const ASSETS = [
   "./",
   "./index.html",
-  "./recipes.json",
-  "./ingredients.json",
   "./manifest.json",
+  "./react.production.min.js",
+  "./react-dom.production.min.js",
+  "./data.js",
+  "./variant-a.js",
   "./icon-180.png",
   "./icon-192.png",
   "./icon-512.png",

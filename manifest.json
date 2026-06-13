@@ -2,7 +2,7 @@
   "name": "コンメモ",
   "short_name": "コンメモ",
   "description": "献立と買い物リストを整理するアプリ",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
