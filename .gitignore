@@ -1,0 +1,21 @@
+# 認証情報・秘密（絶対にコミットしない）
+.env
+.env.*
+!.env.example
+.secrets
+*.pem
+*.key
+*credential*
+*secret*
+service-account*.json
+
+# 依存・ビルド成果物
+node_modules/
+dist/
+.vite/
+
+# OS・エディタ・ログ
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
